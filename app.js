@@ -1,8 +1,15 @@
-const experss = require('express');
+const express = require('express');
 const config = require('config');
 const mongoose = require('mongoose');
 
-const app = experss();
+const routes = {
+    controller: require('./routes/controller.routes')
+};
+
+const app = express();
+
+app.use(express.json({ extended: true }));
+app.use('/api/controller', routes.controller);
 
 const PORT = config.get('port') || 8888;
 

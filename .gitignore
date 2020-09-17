@@ -1,0 +1,8 @@
+# Ignore config data
+default.json
+
+# Ignore idea project files
+.idea/
+
+# Ignore project node modules
+node_modules/

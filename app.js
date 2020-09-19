@@ -3,13 +3,13 @@ const config = require('config');
 const mongoose = require('mongoose');
 
 const routes = {
-    controller: require('./routes/controller.routes')
+    controllers: require('./routes/controllers.routes')
 };
 
 const app = express();
 
 app.use(express.json({ extended: true }));
-app.use('/api/controller', routes.controller);
+app.use('/api/controllers', routes.controllers);
 
 const PORT = config.get('port') || 8888;
 

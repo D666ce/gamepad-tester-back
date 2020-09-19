@@ -1,11 +1,11 @@
 const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
 
-const Controller = require('../models/Controller');
+const Controllers = require('../models/Controllers');
 
 const router = Router();
 
-/* /api/controller/register */
+/* /api/controllers/register */
 router.post(
     '/register',
     [
@@ -23,28 +23,26 @@ router.post(
             }
 
             const { id, buttons, axes } = req.body;
-            const candidate = await Controller.findOne({ id, buttons, axes });
+            const candidate = await Controllers.findOne({ id, buttons, axes });
 
             if (!candidate) {
-                const controller = new Controller({ id, buttons, axes, count: 1 });
+                const controller = new Controllers({ id, buttons, axes, count: 1 });
                 await controller.save();
-                res.status(200);
+                res.status(200).json(controller);
             } else {
-                candidate.count;
+                await Controllers.updateOne({ _id: candidate._id }, { $inc: { count: 1 }});
+                const result = await Controllers.findOne({ _id: candidate._id });
+                res.status(200).json(result);
             }
-
             await res.status(200);
         } catch (e) {
             res.status(500).json({ message: 'Something went wrong, please try again'})
         }
 });
 
-/* /api/controller/list */
+/* /api/controllers/list */
 router.get(
     '/list',
-    [
-        check('id', 'Incorrect controller id').exists()
-    ],
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -56,16 +54,16 @@ router.get(
                 });
             }
 
-            const { id } = req.body;
+            const candidate = await Controllers.find();
+            res.status(200).json(candidate);
 
-            const candidate = await Controller.find({ id });
-            res.status(200);
-
-            console.log(candidate);
-
-        } catch (e) {
-            res.status(500).json({ message: 'Something went wrong, please try again'})
+        } catch (error) {
+            res.status(500).json({
+                message: 'Something went wrong, please try again',
+                error
+            })
         }
-});
+    }
+);
 
 module.exports = router;

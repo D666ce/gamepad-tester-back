@@ -1,6 +1,7 @@
 const express = require('express');
 const config = require('config');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const routes = {
     controllers: require('./routes/controllers.routes')
@@ -8,6 +9,7 @@ const routes = {
 
 const app = express();
 
+app.use(cors());
 app.use(express.json({ extended: true }));
 app.use('/api/controllers', routes.controllers);
 
